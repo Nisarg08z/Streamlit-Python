@@ -4,7 +4,6 @@ import numpy as np
 
 st.set_page_config(page_title="Simple Sales Dashboard", layout="wide")
 
-# Dummy Data
 @st.cache_data
 def load_data():
     np.random.seed(42)
@@ -19,15 +18,12 @@ def load_data():
 
 df = load_data()
 
-# Sidebar Filters
 st.sidebar.header("Filters")
 region_filter = st.sidebar.multiselect("Select Region", df["Region"].unique(), default=df["Region"].unique())
 product_filter = st.sidebar.multiselect("Select Product", df["Product"].unique(), default=df["Product"].unique())
 
-# Filter Data
 filtered_df = df[df["Region"].isin(region_filter) & df["Product"].isin(product_filter)]
 
-# KPI Section
 st.title("📈 Simple Sales Dashboard")
 
 total_revenue = filtered_df["Revenue"].sum()
@@ -41,18 +37,15 @@ col3.metric("Avg Units per Day", f"{avg_units:.2f}")
 
 st.markdown("---")
 
-# Revenue by Product using built-in bar chart
 st.subheader("Revenue by Product")
 revenue_chart = filtered_df.groupby("Product")["Revenue"].sum()
 st.bar_chart(revenue_chart)
 
-# Units Sold Over Time using line chart
 st.subheader("Units Sold Over Time")
 units_time = filtered_df.groupby("Date")["Units_Sold"].sum()
 st.line_chart(units_time)
 
 st.markdown("---")
 
-# Show Table
 st.subheader("Raw Data")
 st.dataframe(filtered_df.sort_values(by="Date", ascending=False), use_container_width=True)
